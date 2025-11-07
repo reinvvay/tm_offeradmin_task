@@ -27,3 +27,5 @@ docker compose up --build -d
 - API docs (Swagger): `http://localhost/api/schema` 
 - Admin login: `http://localhost/offers/admin/`  
 ```
+
+Dont forget to configure your .env files
