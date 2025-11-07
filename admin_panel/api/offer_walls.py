@@ -1,17 +1,12 @@
-from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiExample
-from rest_framework import serializers, routers, mixins
-from rest_framework import viewsets
+from drf_spectacular.utils import (OpenApiExample, OpenApiResponse,
+                                   extend_schema)
+from rest_framework import mixins, routers, serializers, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from admin_panel.models import (
-    OfferWall,
-    Offer,
-    OfferWallOffer,
-    OfferChoices,
-    OfferWallPopupOffer,
-)
+from admin_panel.models import (Offer, OfferChoices, OfferWall, OfferWallOffer,
+                                OfferWallPopupOffer)
 
 
 class OfferSerializer(serializers.ModelSerializer):

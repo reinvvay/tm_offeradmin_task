@@ -1,4 +1,4 @@
-from litestar import status_codes, Response, MediaType  # type: ignore
+from litestar import MediaType, Response, status_codes  # type: ignore
 
 
 class JsonErrorResponse:
@@ -21,10 +21,8 @@ class NotFound(JsonErrorResponse):
 
 # Usage:
 from litestar import Litestar, get  # type: ignore
-from my_project.responses import (  # type: ignore
-    NotFound,
-    JsonErrorResponse,
-)  # Adjust import path accordingly
+from my_project.responses import (  # type: ignore; Adjust import path accordingly
+    JsonErrorResponse, NotFound)
 
 
 @get("/items/{item_id:int}")

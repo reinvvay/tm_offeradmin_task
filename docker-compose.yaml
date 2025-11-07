@@ -1,17 +1,37 @@
 volumes:
   static:
+  pgdbdata:
 
 services:
+  postgres:
+    image: postgres:alpine
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=offersAdmin
+    volumes:
+      - pgdbdata:/var/lib/postgresql/data/
+    networks:
+      - internal_net
+    restart: always
 
   admin_panel:
     build: .
+    container_name: admin_panel
     volumes:
       - ./static:/opt/static
       - ./media:/opt/media
-    container_name: admin_panel
     environment:
       - DJANGO_SETTINGS_MODULE=offersAdmin.settings.base
-    command: /bin/sh -c "python3 manage.py collectstatic --no-input && python3 manage.py migrate --no-input && gunicorn --bind 0.0.0.0:8000 --workers 2 offersAdmin.wsgi:application"
+    command: >
+      /bin/sh -c "python3 manage.py collectstatic --no-input &&
+                  python3 manage.py migrate --no-input &&
+                  gunicorn --bind 0.0.0.0:8000 --workers 2 offersAdmin.wsgi:application"
+    depends_on:
+      - postgres
+    networks:
+      - internal_net
     ports:
       - "8000:8000"
     restart: unless-stopped
@@ -23,11 +43,14 @@ services:
       - ./static:/opt/static
       - ./media:/opt/media
       - ./nginx/conf:/etc/nginx/conf.d
-      - ./nginx/ssl/default:/etc/ssl/default
-      - ./nginx/ssl/.well-known:/opt/offersAdmin/.well-known
-    ports:
-      - '443:443'
-      - '80:80'
     depends_on:
       - admin_panel
+    networks:
+      - internal_net
+    ports:
+      - "80:80"
     restart: unless-stopped
+
+networks:
+  internal_net:
+    external: true

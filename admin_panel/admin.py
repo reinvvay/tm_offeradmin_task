@@ -6,13 +6,15 @@ from django.contrib import admin, messages
 from django.contrib.admin import action
 from django.core.files.storage import FileSystemStorage
 from django.core.files.uploadedfile import TemporaryUploadedFile
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import path
 from django.utils.html import format_html
 
 from offersAdmin.settings.base import MEDIA_ROOT
-from .models import OfferWall, Offer, OfferWallOffer, OfferChoices, OfferWallPopupOffer
+
+from .models import (Offer, OfferChoices, OfferWall, OfferWallOffer,
+                     OfferWallPopupOffer)
 
 
 def authenticated_only(view):
