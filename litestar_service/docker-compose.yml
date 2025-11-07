@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: litestar_db
+    environment:
+      POSTGRES_DB: offerwall
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d offerwall"]
+      interval: 5s
+      retries: 5
+    networks:
+      - litestar_net
+
+  litestar_service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: litestar_service
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - litestar_net
+      - internal_net
+
+networks:
+  litestar_net:
+  internal_net:
+    external: true
